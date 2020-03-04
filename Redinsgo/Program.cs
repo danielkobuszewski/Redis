@@ -1,6 +1,6 @@
 ﻿using StackExchange.Redis;
 using System;
-
+using System.Linq;
 /*
 O Redinsgo é basicamente um bingo com estruturas em um banco chave/valor.Você deve instalar o Redis em sua máquina ou usar um as a service.
 Em seguida, irá implementar na sua linguagem preferida alguns controles usando o máximo de estruturas do Redis.
@@ -25,13 +25,24 @@ namespace Redinsgo
         {
             var cache = RedisConnectorHelper.Connection.GetDatabase();
 
+            for (var i = 1; i <= 99; i++)
+            {
+                cache.SetAdd("Numeros", i);
+            }
+
             for (var i = 1; i <= 50; i++)
             {
-                var key = $"user:{i.ToString("00")}";
+                var usuarioKey = $"Usuario:{i.ToString("00")}";
 
-                cache.HashSet(key, new HashEntry[] { new HashEntry("name", key), new HashEntry("score", 0) });
+                cache.HashSet(usuarioKey, new HashEntry[] { new HashEntry("Nome", usuarioKey), new HashEntry("Acertos", 0) });
 
-                Console.WriteLine(cache.HashGetAll(key));
+                var cartelaKey = $"Cartela:{i.ToString("00")}";
+
+                var cartela = cache.SetRandomMembers("Numeros", 15);
+
+                cache.SetAdd(cartelaKey, cartela);
+
+                Console.WriteLine($"{usuarioKey} => {String.Join(",", cartela)}");
             }
 
             Console.ReadKey();
