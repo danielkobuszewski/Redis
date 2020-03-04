@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Redinsgo
 {
@@ -10,6 +6,13 @@ namespace Redinsgo
     {
         static void Main(string[] args)
         {
+            var cache = RedisConnectorHelper.Connection.GetDatabase();
+
+            cache.StringSet("Key", "OK");
+
+            Console.WriteLine(cache.StringGet("Key"));
+
+            Console.ReadLine();
         }
     }
 }
