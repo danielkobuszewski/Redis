@@ -29,7 +29,11 @@ namespace Redinsgo
                 var cartela = cache.SetRandomMembers("Numeros", 15);
 
                 cache.SetAdd(cartelaKey, cartela);
+
+                Console.WriteLine($"Usuário: {usuarioKey} => Números da cartela: {String.Join(",", cache.SetMembers(cartelaKey).Select(x => Int32.Parse(x).ToString("00")))}");
             }
+
+            Console.WriteLine();
 
             var lstUsuariosGanhadores = new List<Int32>();
             var lstNumerosSorteados = new List<Int32>();
@@ -55,15 +59,29 @@ namespace Redinsgo
                 }
             }
 
+            Console.WriteLine($"Números sorteados: {String.Join(",", lstNumerosSorteados.Select(x => x.ToString("00")))}");
             Console.WriteLine($"Quantidade de números sorteados: {lstNumerosSorteados.Count()}");
-            Console.WriteLine($"Números sorteados: {String.Join(",", lstNumerosSorteados)}");
+
+            Console.WriteLine();
 
             {
                 var i = lstUsuariosGanhadores.First();
                 var usuarioKey = $"Usuario:{i.ToString("00")}";
                 var cartelaKey = $"Cartela:{i.ToString("00")}";
 
-                Console.WriteLine($"Usuário vencedor: {usuarioKey} => Números da cartela: {String.Join(",", cache.SetMembers(cartelaKey))}");
+                Console.WriteLine($"Usuário vencedor: {usuarioKey} => Números da cartela: {String.Join(",", cache.SetMembers(cartelaKey).Select(x => Int32.Parse(x).ToString("00")))}");
+            }
+
+            Console.WriteLine();
+
+            for (var i = 1; i <= 50; i++)
+            {
+                var usuarioKey = $"Usuario:{i.ToString("00")}";
+                var cartelaKey = $"Cartela:{i.ToString("00")}";
+
+                var acertos = cache.HashGet(usuarioKey, "Acertos");
+
+                Console.WriteLine($"Usuário: {usuarioKey} => Acertos: {acertos}");
             }
 
             Console.ReadKey();
